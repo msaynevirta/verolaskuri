@@ -40,18 +40,18 @@ def LaskePuhtaatAnsiotulot(palkkaTulot, opintoRaha, stipendit):
 def LaskeVerotettavatTulot(puhtaatAnsiotulot, palkkaTulot):
     print("\nVerotettavien tulojen laskenta")
     # Sairasvakuutuksen päivärahamaksu
-    if(palkkaTulot > 14282):
-        sairasvakuutusPaivaraha = (0.0154 * palkkaTulot)
+    if(palkkaTulot > 14574):
+        sairasvakuutusPaivaraha = (0.018 * palkkaTulot)
         verotettavatTulot = puhtaatAnsiotulot - sairasvakuutusPaivaraha
     else:
         sairasvakuutusPaivaraha = 0
         verotettavatTulot = puhtaatAnsiotulot
 
     # Pakolliset ja vapaaehtoiset eläkevakuutusmaksut
-    pakollinenElakemaksu = 0.0675 * palkkaTulot
+    pakollinenElakemaksu = 0.0715 * palkkaTulot
 
     # Pakollinen työttömyysvakuutusmaksu
-    tyottomyysVakuutusmaksu = 0.015 * palkkaTulot
+    tyottomyysVakuutusmaksu = 0.0125 * palkkaTulot
     
     verotettavatTulot -= pakollinenElakemaksu + tyottomyysVakuutusmaksu
 
@@ -64,7 +64,7 @@ def LaskeVerotettavatTulot(puhtaatAnsiotulot, palkkaTulot):
 
 def LaskeKunnallisvero(verotettavatTulot, puhtaatAnsiotulot, palkkaTulot, opintoRaha):
     print("\nKunnallisveron laskenta\n    Vähennykset")
-    #------------ Kunnallisverotuksen ansiotulovähennys ----------------#
+    #------------ Kunnallisverotuksen ansiotulovähennys 2020 ----------------#
     if(2500 < palkkaTulot < 7230):
         ansioTuloVahennys = 0.51 * (palkkaTulot - 2500)
     elif(7230 < palkkaTulot):
@@ -82,7 +82,7 @@ def LaskeKunnallisvero(verotettavatTulot, puhtaatAnsiotulot, palkkaTulot, opinto
         ansioTuloVahennys = 0
     print("        Kunnallisveron ansiotulovähennys: {:.2f} €".format(ansioTuloVahennys))
 
-    #------------------ Opintorahavähennys -----------------#
+    #------------------ Opintorahavähennys 2020 -----------------#
     if(opintoRaha > 2600):
         opintoRahaVahennys = 2600
     else:
@@ -95,15 +95,15 @@ def LaskeKunnallisvero(verotettavatTulot, puhtaatAnsiotulot, palkkaTulot, opinto
 
     print("        Opintorahavähennys: {:.2f} €".format(opintoRahaVahennys))
 
-    #---------------- Kunnallisveron alaiset tulot --------------#
+    #---------------- Kunnallisveron alaiset tulot 2020 --------------#
     kunnallisveroTulo = verotettavatTulot - ansioTuloVahennys - opintoRahaVahennys
     print("    Kunnallisveron alaiset tulot: {:.2f} €".format(kunnallisveroTulo))
 
     # Perusvähennys ja lopullinen vero
-    if(kunnallisveroTulo < 3305):
+    if(kunnallisveroTulo < 3540):
         kunnallisVero = 0
         perusVahennys = kunnallisveroTulo
-    elif(3305 < kunnallisveroTulo < 21700):
+    elif(3540 < kunnallisveroTulo < 23200):
         perusVahennys = 3305 - (0.18 * (kunnallisveroTulo - 3305)) # Perusvähennyksen kunnallisveron alaisiin tuloihin perustuva pieneneminen
         kunnallisVero = 0.18 * (kunnallisveroTulo - perusVahennys)
     else:
@@ -117,17 +117,17 @@ def LaskeKunnallisvero(verotettavatTulot, puhtaatAnsiotulot, palkkaTulot, opinto
 def LaskeValtionVero(verotettavatTulot):
     print("\nValtionveron laskenta")
     #------------------  Tuloveroasteikko -------------------#
-    if(17600 < verotettavatTulot < 26400):
-        porras = 17600
+    if(18100 <= verotettavatTulot < 27200):
+        porras = 18100
         prosentti = 0.06
-    elif(26400 < verotettavatTulot < 43500):
-        porras = 26400
+    elif(27200 <= verotettavatTulot < 44800):
+        porras = 27200
         prosentti = 0.1725
-    elif(43500 < verotettavatTulot < 76100):
-        porras = 43500
+    elif(44800 <= verotettavatTulot < 78500):
+        porras = 44800
         prosentti = 0.2125
-    elif(76100 < verotettavatTulot):
-        porras = 76100
+    elif(78500 <= verotettavatTulot):
+        porras = 78500
         prosentti = 0.3125
     else:
         porras = 0
@@ -159,28 +159,28 @@ def LaskeYleVero(puhtaatAnsiotulot, paaOmaTulot):
 
 def LaskeSairaanhoitomaksu(opintoRaha):
     print("\nSairaanhoitomaksun laskenta")
-    # Sairaanhoitomaksu
-    sairaanhoitoMaksu = opintoRaha * 0.0161
+    # Korotettu sairaanhoitomaksu
+    sairaanhoitoMaksu = opintoRaha * 0.0165
     print("    Sairaanhoitomaksu: {:.2f} €".format(sairaanhoitoMaksu))
 
     return(sairaanhoitoMaksu)
 
 def LaskeVahennykset(palkkaTulot, puhtaatAnsiotulot):
     print("\nMuut vähennykset")
-    # Työtulovähennys
-    # 12 % 2500€ ylittävältä osalta, max 1540€
-    # >33000 € -> pienenee 0.0165 * (pa - 33000)
+    # Työtulovähennys 2020
+    # 12.5 % 2500€ ylittävältä osalta, max 1770€
+    # >33000 € -> pienenee 0.0184 * (pa - 33000)
     if(2500 < palkkaTulot < 33000):
-        tyotuloVahennys = 0.122 * (palkkaTulot - 2500)
+        tyotuloVahennys = 0.125 * (palkkaTulot - 2500)
     
     else:
         tyotuloVahennys = 0
 
-    if(tyotuloVahennys > 1630): # Korjataan tarvittaessa maksimisummaan
-        tyotuloVahennys = 1630
+    if(tyotuloVahennys > 1770): # Korjataan tarvittaessa maksimisummaan
+        tyotuloVahennys = 1770
 
     if(palkkaTulot > 33000):
-        tyotuloVahennys -= 0.0172 * (puhtaatAnsiotulot - 33000)
+        tyotuloVahennys -= 0.0184 * (puhtaatAnsiotulot - 33000)
 
     if(tyotuloVahennys < 0):
         tyotuloVahennys = 0
@@ -190,11 +190,11 @@ def LaskeVahennykset(palkkaTulot, puhtaatAnsiotulot):
     return(tyotuloVahennys)
 
 def LaskeAsumistuki(totTulot):
-    perusOmavastuu = 0.42 * ((totTulot / 12) - (597 + 99 * 1))
+    perusOmavastuu = 0.42 * ((totTulot / 12) - (603 + 100 * 1))
     if(perusOmavastuu < 0):
         perusOmavastuu = 0
     
-    asumisTuki = 0.8 * (499 - perusOmavastuu) * 12
+    asumisTuki = 0.8 * (503 - perusOmavastuu) * 12
 
     if(asumisTuki < 0):
         asumisTuki = 0
@@ -338,4 +338,4 @@ def ExternalRun(palkkaTulot, alkupOsinkoTulot, stipendit):
 
     return(nettoTulot + asumisTuki, asumisTuki, opintoRaha, totVerot)
 
-main()
+#main()
